@@ -13,10 +13,33 @@ defmodule HopStopWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :api_auth do
+    plug HopStopWeb.Guardian.AuthPipeline
+    plug HopStopWeb.Plugs.FetchSession
+  end
+
   scope "/", HopStopWeb do
     pipe_through :browser
 
     get "/", PageController, :index
+  end
+
+  scope "/api/v1", HopStopWeb do
+    pipe_through :api
+
+    resources "/users", UserController, only: [:create]
+    resources "/session", SessionController, only: [:create]
+  end
+
+  scope "/api/v1", HopStopWeb do
+    pipe_through [:api, :api_auth]
+
+    resources "/users", UserController, except: [:new, :edit, :create]
+    resources "/friends", FriendController, except: [:new, :edit]
+    resources "/favorites", FavoriteController, except: [:new, :edit]
+    resources "/ratings", RatingController, except: [:new, :edit]
+    resources "/comments", CommentController, except: [:new, :edit]
+    resources "/meetmeheres", MeetMeHereController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.

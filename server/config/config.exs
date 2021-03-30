@@ -10,6 +10,14 @@ use Mix.Config
 config :hop_stop,
   ecto_repos: [HopStop.Repo]
 
+config :hop_stop,
+  mix_env: "#{Mix.env()}"
+
+# Configure Guardian for JWTs
+config :hop_stop, HopStopWeb.Guardian,
+  issuer: "hop_stop",
+  secret_key: "LMEjcWw2FmmWSzExjkP9GI7HeF2GSWoCBnpusQqq4/fpRarTcDJEAgdAZ2CS3DOU"
+
 # Configures the endpoint
 config :hop_stop, HopStopWeb.Endpoint,
   url: [host: "localhost"],
@@ -17,6 +25,13 @@ config :hop_stop, HopStopWeb.Endpoint,
   render_errors: [view: HopStopWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: HopStop.PubSub,
   live_view: [signing_salt: "aKuFZj31"]
+
+# Configure CORS (for development)
+config :cors_plug,
+  origin: ["http://localhost:3000"],
+  max_age: 86400,
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+  headers: ["Authentication", "Content-Type"]
 
 # Configures Elixir's Logger
 config :logger, :console,

@@ -2,8 +2,8 @@ use Mix.Config
 
 # Configure your database
 config :hop_stop, HopStop.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "hopstop",
+  password: "9Ss5Dz8khb",
   database: "hop_stop_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,

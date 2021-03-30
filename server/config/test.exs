@@ -6,8 +6,8 @@ use Mix.Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :hop_stop, HopStop.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "hopstop",
+  password: "9Ss5Dz8khb",
   database: "hop_stop_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
