@@ -22,6 +22,7 @@ defmodule HopStopWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/photos/:hash", UserController, :profile_photo
   end
 
   scope "/api/v1", HopStopWeb do

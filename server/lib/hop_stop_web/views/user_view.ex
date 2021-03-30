@@ -7,13 +7,13 @@ defmodule HopStopWeb.UserView do
   end
 
   def render("show.json", %{user: user}) do
-    %{data: render_one(user, UserView, "user.json")}
+    %{user: render_one(user, UserView, "user.json")}
   end
 
   def render("user.json", %{user: user}) do
     %{id: user.id,
       name: user.name,
-      password_hash: user.password_hash,
+      email: user.email,
       pfp_hash: user.pfp_hash,
       bio: user.bio}
   end

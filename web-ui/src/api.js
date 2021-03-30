@@ -4,13 +4,17 @@ import store from './store';
 function tokenHeader() {
   let token = store.getState()?.session?.token;
   return token ? {
-    'Authentication': `Bearer ${token}`
+    'Authorization': `Bearer ${token}`
   } : {}
+}
+
+function api_path() {
+  return process.env.REACT_APP_API_URL + "/api/v1";
 }
 
 async function api_get(path) {
   let text = await fetch(
-    process.env.REACT_APP_API_URL + path, {
+    api_path() + path, {
       headers: tokenHeader()
     });
   let resp = await text.json();
@@ -26,7 +30,7 @@ async function api_post(path, data) {
     body: JSON.stringify(data),
   };
   let text = await fetch(
-    process.env.REACT_APP_API_URL + path, opts);
+    api_path() + path, opts);
   let resp = await text.json();
   console.log(resp);
   return resp;
@@ -41,7 +45,7 @@ async function api_patch(path, data) {
     body: JSON.stringify(data),
   };
   let text = await fetch(
-    process.env.REACT_APP_API_URL + path, opts);
+    api_path() + path, opts);
   let resp = await text.json();
   return resp;
 }
@@ -53,7 +57,7 @@ async function api_delete(path) {
       'Content-Type': 'application/json'
     }, tokenHeader())
   };
-  await fetch(process.env.REACT_APP_API_URL + path, opts);
+  await fetch(api_path() + path, opts);
 }
 
 export async function api_login(email, password) {
@@ -76,13 +80,13 @@ export async function api_register(user) {
   userData.append("user[email]", user.email);
   userData.append("user[name]", user.name);
   userData.append("user[password]", user.password);
-  userData.append("user[pfp]", user.pfp);
+  if (user.pfp) userData.append("user[pfp]", user.pfp);
   let opts = {
     method: 'POST',
     headers: Object.assign(tokenHeader()),
     body: userData
   };
-  let text = await fetch(process.env.REACT_APP_API_URL + "/users", opts);
+  let text = await fetch(api_path() + "/users", opts);
   let data = await text.json();
   clear_banners();
   if (data.session) {
@@ -94,4 +98,54 @@ export async function api_register(user) {
   }
   dispatch_banners(data);
   return data;
+}
+
+export async function fetch_profile() {
+  let user_id = store.getState()?.session?.user_id;
+  if (!user_id) return user_id;
+  let data = await api_get(`/users/${user_id}`);
+  if (data.user) {
+    let action = {
+      type: 'user/set',
+      data: data.user
+    }
+    store.dispatch(action);
+  }
+  dispatch_banners(data);
+  return data;
+}
+
+export async function edit_profile(user) {
+  let userData = new FormData();
+  userData.append("user[email]", user.email);
+  userData.append("user[name]", user.name);
+  userData.append("user[bio]", user.bio);
+  if (user.pfp) userData.append("user[pfp]", user.pfp);
+  let opts = {
+    method: 'PATCH',
+    headers: Object.assign(tokenHeader()),
+    body: userData
+  };
+  let text = await fetch(api_path() + `/users/${user.id}`, opts);
+  let data = await text.json();
+  clear_banners();
+  if (data.user) {
+    let action = {
+      type: 'user/set',
+      data: data.user,
+    }
+    store.dispatch(action);
+
+    action = {
+      type: 'success/set',
+      data: 'Profile updated successfully.'
+    }
+    store.dispatch(action);
+  }
+  dispatch_banners(data);
+  return data;
+}
+
+export function pfp_path(hash) {
+  return process.env.REACT_APP_API_URL + `/photos/${hash}`;
 }

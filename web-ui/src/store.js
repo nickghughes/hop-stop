@@ -73,9 +73,20 @@ function success(state = null, action) {
   }
 }
 
+function user(state = null, action) {
+  switch (action.type) {
+    case 'user/set':
+      return action.data;
+    case 'session/clear':
+      return null;
+    default:
+      return state;
+  }
+}
+
 function root_reducer(state, action) {
   let redu = combineReducers(
-    {session, error, info, success}
+    {session, error, info, success, user}
   );
 
   return redu(state, action);

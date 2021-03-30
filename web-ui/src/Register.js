@@ -49,7 +49,7 @@ function Register() {
       <Row>
         <Col>
           <Form.Group>
-            <Form.Label for="pfp">Profile Photo (optional)</Form.Label>
+            <Form.Label>Profile Photo (optional)</Form.Label>
             <Form.Control type="file" id="pfp" onChange={(ev) => setPfp(ev.target.files[0])} />
           </Form.Group>
           <Form.Group>

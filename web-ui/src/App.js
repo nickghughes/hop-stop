@@ -1,21 +1,26 @@
-import { Container } from 'react-bootstrap';
+import { Container, Card } from 'react-bootstrap';
 import { Switch, Route } from 'react-router-dom';
 import TopBar from './TopBar';
 import Landing from './Landing';
+import Profile from './Profile';
 import './App.scss';
 
 function App() {
   return (
     <Container>
       <TopBar />
-      <Switch>
-        <Route path="/" exact>
-          <Landing />
-        </Route>
-        <Route path="/register" exact>
-          <div/>
-        </Route>
-      </Switch>
+      <Card>
+        <Card.Body>
+          <Switch>
+            <Route path="/" exact>
+              <Landing />
+            </Route>
+            <Route path="/profile" exact>
+              <Profile />
+            </Route>
+          </Switch>
+        </Card.Body>
+      </Card>
     </Container>
   );
 }

@@ -13,12 +13,18 @@ let AccountDropdown = connect(({session}) => ({session}))(({session, dispatch}) 
     history.push("/");
     dispatch({type: 'session/clear'});
   }
+
+  function profile() {
+    clear_banners();
+    history.push("/profile");
+  }
+
   return <Dropdown as={ButtonGroup}>
     <Dropdown.Toggle><PersonCircle className="mb-1 mr-1" /></Dropdown.Toggle>
     <Dropdown.Menu>
       <Dropdown.Header>Logged in as: {session.name}</Dropdown.Header>
       <Dropdown.Divider />
-      {/* <Dropdown.Item as="button"><span className="mr-2"><PencilSquare /></span>Edit Profile</Dropdown.Item> */}
+      <Dropdown.Item as="button" onClick={profile}><span className="mr-2"><PencilSquare /></span>Go to Profile</Dropdown.Item>
       <Dropdown.Item as="button" onClick={logout}><span className="mr-2"><BoxArrowRight /></span>Logout</Dropdown.Item>
     </Dropdown.Menu>
   </Dropdown>
