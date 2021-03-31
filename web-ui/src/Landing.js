@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 import Login from './Login';
 import Register from './Register';
+import Search from './Search';
 import { Row, Col } from 'react-bootstrap';
 
 function Landing({ session }) {
-  return session ? "Search will go here" :
+  return session ? <Search /> :
     <div>
       <Row>
         <Col className="text-center">

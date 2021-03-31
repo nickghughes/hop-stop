@@ -102,6 +102,7 @@ function Profile({ user }) {
   });
 
   function goBack() {
+    clear_banners();
     history.push("/");
   }
 

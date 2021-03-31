@@ -1,7 +1,6 @@
 import { Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
 import { api_register } from './api';
-import { unstable_batchedUpdates } from 'react-dom';
 
 function Register() {
   const [pfp, setPfp] = useState();

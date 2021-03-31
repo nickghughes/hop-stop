@@ -1,5 +1,6 @@
 import { clear_banners, dispatch_banners } from './store';
 import store from './store';
+import { uniqBy } from 'lodash';
 
 function tokenHeader() {
   let token = store.getState()?.session?.token;
@@ -146,6 +147,48 @@ export async function edit_profile(user) {
   return data;
 }
 
+export async function fetch_breweries(args) {
+  let query_str = Object.keys(args)
+    .map(arg => `${encodeURIComponent(arg)}=${encodeURIComponent(args[arg])}`)
+    .join("&");
+  console.log(query_str);
+  return api_get(`/breweries?${query_str}`).then((data) => {
+    if (data.data) {
+      let data1 = data.data;
+      let breweriesToShow = uniqBy(data.data.results, b => b.id);
+      data1.results = breweriesToShow;
+      let action = {
+        type: 'results/set',
+        data: data1
+      }
+      store.dispatch(action);
+    }
+  })
+}
+
+export async function next_breweries() {
+  let results = store.getState()?.results;
+  if (!results) return;
+  console.log("results", results)
+  let query_str = `query=${results.query}&page=${results.page}`;
+  console.log(query_str);
+  return api_get(`/breweries?${query_str}`).then((data) => {
+    if (data.data) {
+      let breweries = results.results;
+      breweries = uniqBy(breweries.concat(data.data.results), b => b.id);
+      let action = {
+        type: 'results/set',
+        data: {page: data.data.page, query: data.data.query, results: breweries}
+      }
+      store.dispatch(action);
+    }
+    return data;
+  })
+}
+
 export function pfp_path(hash) {
   return process.env.REACT_APP_API_URL + `/photos/${hash}`;
+}
+
+export function init_state() {
 }

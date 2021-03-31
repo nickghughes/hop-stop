@@ -45,8 +45,6 @@ defmodule HopStopWeb.UserController do
       user_params
     end
 
-    user = conn.assigns[:user]
-
     with {:ok, %User{} = user} <- Users.create_user(user_params) do
       {:ok, token, _} = HopStopWeb.Guardian.encode_and_sign(user)
       conn
@@ -61,11 +59,11 @@ defmodule HopStopWeb.UserController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"id" => _id}) do
     render(conn, "show.json", user: conn.assigns[:user])
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
+  def update(conn, %{"id" => _id, "user" => user_params}) do
     user_params = if user_params["pfp"] do
       {:ok, pfp_hash} = HopStop.ProfilePhotos.save_photo(
         user_params["pfp"].filename,
@@ -83,7 +81,7 @@ defmodule HopStopWeb.UserController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"id" => _id}) do
     with {:ok, %User{}} <- Users.delete_user(conn.assigns[:user]) do
       send_resp(conn, :no_content, "")
     end

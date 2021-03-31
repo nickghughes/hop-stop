@@ -84,9 +84,54 @@ function user(state = null, action) {
   }
 }
 
+function results(state = null, action) {
+  switch (action.type) {
+    case 'results/set':
+      return action.data;
+    case 'session/clear':
+      return null;
+    default:
+      return state;
+  }
+}
+
+function breweries(state = null, action) {
+  switch (action.type) {
+    case 'results/set':
+      return action.data.results;
+    case 'filters/set':
+      return null;
+    case 'session/clear':
+      return null;
+    default:
+      return state;
+  }
+}
+
+function coords(state = null, action) {
+  switch (action.type) {
+    case 'filters/set':
+      return action.data.coords || null;
+    default:
+      return state;
+  }
+}
+
+function filters(state = {}, action) {
+  switch (action.type) {
+    case 'filters/set':
+      console.log(action.data);
+      return action.data;
+    case 'session/clear':
+      return {};
+    default:
+      return state;
+  }
+}
+
 function root_reducer(state, action) {
   let redu = combineReducers(
-    {session, error, info, success, user}
+    {session, error, info, success, user, results, breweries, coords, filters}
   );
 
   return redu(state, action);

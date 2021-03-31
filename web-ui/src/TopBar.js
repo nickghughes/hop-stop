@@ -1,7 +1,7 @@
 import logo from './logo.png';
 import { connect } from 'react-redux';
 import { PencilSquare, BoxArrowRight, PersonCircle } from 'react-bootstrap-icons';
-import { Row, Col, Alert, Dropdown, DropdownButton, ButtonGroup } from 'react-bootstrap';
+import { Row, Col, Alert, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { clear_banners } from './store';
 
@@ -36,7 +36,7 @@ function TopBar({session, error, info, success}) {
     <div>
       <Row className="my-3">
         <Col xs={3}>
-          <img src={logo} />
+          <img src={logo} style={{height: 70}}/>
         </Col>
         {session && 
           <Col xs={9} className="text-right">

@@ -41,6 +41,7 @@ defmodule HopStopWeb.Router do
     resources "/ratings", RatingController, except: [:new, :edit]
     resources "/comments", CommentController, except: [:new, :edit]
     resources "/meetmeheres", MeetMeHereController, except: [:new, :edit]
+    resources "/breweries", BreweryController, only: [:index]
   end
 
   # Other scopes may use custom stacks.
