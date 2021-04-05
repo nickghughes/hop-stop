@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { next_breweries, fetch_breweries } from './api';
+import { next_breweries } from './api';
 import { Row, Col, Spinner, Card, Button } from 'react-bootstrap';
 import Filters from './Filters';
 import { useHistory } from 'react-router-dom';

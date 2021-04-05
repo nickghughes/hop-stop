@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { Row, Col, Form, Button, InputGroup, Spinner, Dropdown, DropdownButton } from "react-bootstrap";
+import { Row, Col, Form, Button, InputGroup, Spinner, Dropdown } from "react-bootstrap";
 import { Star, StarFill, FilterRight } from "react-bootstrap-icons";
 import { useState } from "react";
 import { fetch_breweries } from "./api";
@@ -11,7 +11,7 @@ function TypeFilter({ currentType, setType }) {
   return <Dropdown.Menu>
       {breweryTypes.map((type) => 
         <Dropdown.Item as="button" onClick={() => setType(type.toLowerCase())} key={type}>
-          {currentType == type.toLowerCase() ? <b>{type}</b> : type}
+          {currentType === type.toLowerCase() ? <b>{type}</b> : type}
         </Dropdown.Item>
       )}
     </Dropdown.Menu>

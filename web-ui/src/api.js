@@ -1,6 +1,5 @@
 import { clear_banners, dispatch_banners } from './store';
 import store from './store';
-import { uniqBy } from 'lodash';
 
 function tokenHeader() {
   let token = store.getState()?.session?.token;

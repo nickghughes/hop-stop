@@ -49,8 +49,8 @@ function ReviewForm({ breweryId, myReview, user }) {
         <Form.Control as="textarea" value={body} onChange={ev => setBody(ev.target.value)} placeholder="(Optional) Add a comment..."/>
         <div className="text-right my-1">
           {review ?
-            <Button type="submit" variant="info" disabled={stars == 0}>Edit Review</Button> :
-            <Button type="submit" variant="primary" disabled={stars == 0}>Submit Review</Button>
+            <Button type="submit" variant="info" disabled={stars === 0}>Edit Review</Button> :
+            <Button type="submit" variant="primary" disabled={stars === 0}>Submit Review</Button>
           }
         </div>
       </Col>

@@ -1,7 +1,5 @@
 import { connect } from "react-redux";
-import { useEffect } from "react";
-import { Row, Col, Spinner } from "react-bootstrap";
-import { fetch_breweries, next_breweries } from "./api";
+import { Row, Col } from "react-bootstrap";
 import Map from './Map';
 import Feed from './Feed';
 
