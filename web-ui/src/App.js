@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import TopBar from './TopBar';
 import Landing from './Landing';
 import Profile from './Profile';
+import BreweryShow from './BreweryShow';
 import './App.scss';
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
             </Route>
             <Route path="/profile" exact>
               <Profile />
+            </Route>
+            <Route path="/breweries/:id">
+              <BreweryShow />
             </Route>
           </Switch>
         </Card.Body>

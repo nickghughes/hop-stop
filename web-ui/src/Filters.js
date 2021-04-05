@@ -1,41 +1,50 @@
 import { connect } from "react-redux";
-import { Row, Col, Form, Button, InputGroup, Spinner } from "react-bootstrap";
+import { Row, Col, Form, Button, InputGroup, Spinner, Dropdown, DropdownButton } from "react-bootstrap";
 import { Star, StarFill, FilterRight } from "react-bootstrap-icons";
 import { useState } from "react";
-import { capitalize } from "lodash";
 import { fetch_breweries } from "./api";
 
-function Filters({filters, dispatch}) {
+function TypeFilter({ currentType, setType }) {
+  // Taken from API documentation
+  const breweryTypes = ["Micro", "Nano", "Regional", "Brewpub", "Planning", "Contract", "Proprietor"];
+
+  return <Dropdown.Menu>
+      {breweryTypes.map((type) => 
+        <Dropdown.Item as="button" onClick={() => setType(type.toLowerCase())} key={type}>
+          {currentType == type.toLowerCase() ? <b>{type}</b> : type}
+        </Dropdown.Item>
+      )}
+    </Dropdown.Menu>
+}
+
+function Filters({filters, dispatch, onChange}) {
   const [locationLoading, setLocationLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState(filters.searchTerm || "");
   const [locationStr, setLocationStr] = useState(filters.locationStr || "");
+  const [type, setType] = useState();
 
   function saveFilters(f) {
+    onChange();
+    delete f.next_page;
     let action = {
       type: 'filters/set',
       data: f
     }
     dispatch(action);
 
-    if (f.coords) {
-      fetch_breweries(f.coords);
-    }
-    if (f.locationStr) {
-      if (!isNaN(f.locationStr)) {
-        fetch_breweries({by_postal: f.locationStr})
-      } else {
-        let [city, state] = f.locationStr.split(",").map(n => n.trim());
-        city = city.split(" ").map(n => capitalize(n)).join(" ");
-        state = state.length == 2 ? state.toUpperCase() : capitalize(state);
-        console.log(city, state);
-        fetch_breweries({by_city: city, by_state: state});
-      }
-    }
+    fetch_breweries(f);
   }
 
   function updateSearchTerm() {
     let filters1 = Object.assign({}, filters);
     filters1.searchTerm = searchTerm;
+    saveFilters(filters1);
+  }
+
+  function clearSearchTerm() {
+    let filters1 = Object.assign({}, filters);
+    delete filters1.searchTerm;
+    setSearchTerm("");
     saveFilters(filters1);
   }
 
@@ -64,10 +73,6 @@ function Filters({filters, dispatch}) {
     }
   }
 
-  function setLocationDisabled() {
-    return locationStr.length === 0 || (isNaN(locationStr) ? !locationStr.includes(",") : locationStr.length !== 5);
-  }
-
   function setLocation() {
     let filters1 = Object.assign({}, filters);
     filters1.locationStr = locationStr;
@@ -83,14 +88,27 @@ function Filters({filters, dispatch}) {
     saveFilters(filters1);
   }
 
-  function editFilters() {
-    // TODO
+  function updateType(t) {
+    let filters1 = Object.assign({}, filters);
+    if (type === t) {
+      setType(undefined);
+      delete filters1.type;
+    } else {
+      setType(t);
+      filters1.type = t;
+    }
+    saveFilters(filters1);
   }
 
   return <div>
     <Row>
       <Col xs={11}>
         <InputGroup>
+          {filters.searchTerm &&
+            <InputGroup.Prepend>
+              <Button variant="secondary" onClick={clearSearchTerm}>X</Button>
+            </InputGroup.Prepend>
+          }
           <Form.Control type="text" placeholder="Search breweries..." value={searchTerm} onChange={(ev) => setSearchTerm(ev.target.value)} />
           <InputGroup.Append>
             <Button variant="info" disabled={searchTerm.length === 0} onClick={updateSearchTerm}>Search</Button>
@@ -102,35 +120,34 @@ function Filters({filters, dispatch}) {
           <StarFill style={{height: "1.5em", width: "1.5em", color: "yellow"}} onClick={toggleFavorite} /> :
           <Star style={{height: "1.5em", width: "1.5em"}} onClick={toggleFavorite} />
         }
-        
       </Col>
     </Row>
     <Row className="mt-2">
-      <Col xs={11}>
+      <Col xs={10}>
           <Row>
-            <Col xs={3} className="mt-1 mr-0 pr-0">
-              <Button className="btn-sm" onClick={getLocation} disabled={filters.coords}>
+            <Col xs={4} className="mt-1 mr-0 pr-0">
+              <span><Button className="btn-sm" onClick={getLocation} disabled={filters.coords}>
                 {locationLoading ?
                   <Spinner animation="border" variant="primary" style={{height:"1em", width: "1em"}} /> :
                   <small>Use My Location</small>
                 }
-              </Button>
-            </Col>
-            <Col xs={1} className="mr-0 pr-0 mt-2">
-              <p> or </p>
+              </Button></span><span className="ml-2">or</span>
             </Col>
             <Col xs={8}>
               <InputGroup>
                 <Form.Control type="text" placeholder="Enter 'City, State' or ZIP" value={locationStr} onChange={(ev) => setLocationStr(ev.target.value)}/>
                 <InputGroup.Append>
-                  <Button variant="info" disabled={setLocationDisabled()} onClick={setLocation}>Apply</Button>
+                  <Button variant="info" disabled={locationStr.length === 0} onClick={setLocation}>Apply</Button>
                 </InputGroup.Append>
               </InputGroup>
             </Col>
           </Row>
       </Col>
-      <Col xs={1} className="pl-0 mt-1">
-        <FilterRight style={{height: "1.5em", width: "1.5em"}}/>
+      <Col xs={2} className="pl-0 ml-0">
+        <Dropdown>
+          <Dropdown.Toggle size="sm" variant="secondary"><FilterRight style={{height: "1.5em", width: "1.5em"}} className="mb-1 mr-1" /></Dropdown.Toggle>
+          <TypeFilter currentType={type} setType={updateType} />
+        </Dropdown>
       </Col>
     </Row>
   </div>

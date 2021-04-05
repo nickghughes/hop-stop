@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Row, Col, Form, Button, Spinner, Image } from 'react-bootstrap';
 import { ArrowLeft } from 'react-bootstrap-icons';
-import { fetch_profile, edit_profile, pfp_path } from './api';
+import { edit_profile, pfp_path } from './api';
 import { clear_banners } from './store';
 
 function EditProfile({ user, returnToView }) {
@@ -90,16 +90,6 @@ function Profile({ user }) {
   let history = useHistory();
 
   const [editing, setEditing] = useState(false);
-
-  useEffect(() => {
-    if (!user) {
-      fetch_profile().then((data) => {
-        if (data.error) {
-          history.push("/");
-        }
-      })
-    }
-  });
 
   function goBack() {
     clear_banners();

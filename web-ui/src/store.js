@@ -120,7 +120,6 @@ function coords(state = null, action) {
 function filters(state = {}, action) {
   switch (action.type) {
     case 'filters/set':
-      console.log(action.data);
       return action.data;
     case 'session/clear':
       return {};
@@ -129,9 +128,20 @@ function filters(state = {}, action) {
   }
 }
 
+function brewery(state = null, action) {
+  switch (action.type) {
+    case 'brewery/set':
+      return action.data;
+    case 'session/clear':
+      return null;
+    default:
+      return state;
+  }
+}
+
 function root_reducer(state, action) {
   let redu = combineReducers(
-    {session, error, info, success, user, results, breweries, coords, filters}
+    {session, error, info, success, user, results, breweries, coords, filters, brewery}
   );
 
   return redu(state, action);

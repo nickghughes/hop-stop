@@ -1,9 +1,10 @@
 import logo from './logo.png';
 import { connect } from 'react-redux';
 import { PencilSquare, BoxArrowRight, PersonCircle } from 'react-bootstrap-icons';
-import { Row, Col, Alert, Dropdown, ButtonGroup } from 'react-bootstrap';
+import { Row, Col, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { clear_banners } from './store';
+import DismissibleAlert from './DismissibleAlert';
 
 let AccountDropdown = connect(({session}) => ({session}))(({session, dispatch}) => {
   let history = useHistory();
@@ -47,21 +48,21 @@ function TopBar({session, error, info, success}) {
       {success &&
         <Row>
           <Col>
-            <Alert variant="success">{success}</Alert>
+            <DismissibleAlert variant="success" message={success} />
           </Col>
         </Row>
       }
       {info &&
         <Row>
           <Col>
-            <Alert variant="info">{info}</Alert>
+            <DismissibleAlert variant="info" message={info} />
           </Col>
         </Row>
       }
       {error &&
         <Row>
           <Col>
-            <Alert variant="danger">{error}</Alert>
+            <DismissibleAlert variant="danger" message={error} />
           </Col>
         </Row>
       }

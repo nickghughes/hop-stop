@@ -1,55 +1,76 @@
 import { connect } from 'react-redux';
-import GoogleMapReact from 'google-map-react';
-import { PinFill } from 'react-bootstrap-icons';
-import ReactTooltip from 'react-tooltip';
-import { useState } from 'react';
-
-function Marker({ color, text, scale, tipId }) {
-  return (
-    <div>
-      <PinFill data-tip data-for={tipId} style={{height: `${scale}em`, width: `${scale}em`, color}} className="pin" />
-      <ReactTooltip id={tipId} type="light">{text}</ReactTooltip>
-    </div>
-  );
-}
+import GoogleMapReact, { fitBounds } from 'google-map-react';
+import { useRef } from 'react'
+import useBoundingclientrect from "@rooks/use-boundingclientrect";
+import MapMarker from './MapMarker';
 
 function Map({coords, breweries}) {
-  const [avgBCoords, setAvgBCoords] = useState(null);
+  const mapRef = useRef();
+  const mapRect = useBoundingclientrect(mapRef);
 
-  function avgBreweryCoords() {
-    if (avgBCoords) return avgBCoords;
-    if (!breweries) return null;
-    let breweriesToUse = breweries.filter(b => b.latitude && b.longitude);
-    if (breweriesToUse.length === 0) return null;
-    let coords = {lat: 0, lng: 0};
-    breweriesToUse.forEach((b) => {
-      coords.lat += Number(b.latitude)
-      coords.lng += Number(b.longitude)
-    })
-    coords.lat /= breweriesToUse.length;
-    coords.lng /= breweriesToUse.length;
-    setAvgBCoords(coords);
-    return coords;
+  function bounds() {
+    let lats = []; let lngs = [];
+
+    if (coords) {
+      lats.push(coords.lat);
+      lngs.push(coords.lng)
+    }
+
+    if (breweries) {
+      breweries.forEach((b) => {
+        lats.push(Number(b.latitude));
+        lngs.push(Number(b.longitude));
+      })
+    }
+
+    if (lats.length) {
+      let l =  {
+        nw: {
+          lat: Math.max(...lats),
+          lng: Math.min(...lngs)
+        },
+        se: {
+          lat: Math.min(...lats),
+          lng: Math.max(...lngs)
+        }
+      }
+      return l;
+    }
+
+    return {
+      nw: {
+        lat: 50.01038826014866,
+        lng: -118.6525866875
+      },
+      se: {
+        lat: 32.698335045970396,
+        lng: -32.0217273125
+      }
+    };
   }
 
-  function centerCoords() {
-    return coords || avgBreweryCoords();
+  let c, z;
+  if (mapRect) {
+    let {center, zoom} = fitBounds(bounds(), { height: mapRect.height, width: mapRect.width });
+    c = center;
+    z = zoom;
   }
 
   return (
-    centerCoords() &&
-    <GoogleMapReact
-      bootstrapURLKeys={{key: process.env.REACT_APP_MAPS_API_KEY}}
-      defaultCenter={centerCoords()}
-      defaultZoom={11}
-    >
-      {coords &&
-        <Marker lat={coords.lat} lng={coords.lng} color="red" scale={2.5} tipId="self" text="You are here" />
-      }
-      {breweries &&
-        breweries.map(b => (b.latitude && b.longitude) ? <Marker lat={b.latitude} lng={b.longitude} scale={2} key={`map${b.id}`} text={b.name} tipId={`marker${b.id}`}/> : null)
-      }
-    </GoogleMapReact>
+    <div ref={mapRef} style={{height:"100%"}}>
+      <GoogleMapReact
+        bootstrapURLKeys={{key: process.env.REACT_APP_MAPS_API_KEY}}
+        center={c}
+        zoom={z}
+      >
+        {coords &&
+          <MapMarker lat={coords.lat} lng={coords.lng} color="red" scale={2.5} tipId="self" text="You are here" />
+        }
+        {breweries &&
+          breweries.map(b => (b.latitude && b.longitude) ? <MapMarker lat={b.latitude} lng={b.longitude} scale={2} key={`map${b.id}`} text={b.name} tipId={`marker${b.id}`}/> : null)
+        }
+      </GoogleMapReact>
+    </div>
   );
 }
 

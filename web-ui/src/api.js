@@ -33,7 +33,6 @@ async function api_post(path, data) {
   let text = await fetch(
     api_path() + path, opts);
   let resp = await text.json();
-  console.log(resp);
   return resp;
 }
 
@@ -71,6 +70,7 @@ export async function api_login(email, password) {
       }
       store.dispatch(action);
     }
+    fetch_profile();
     dispatch_banners(data);
     return data;
   });
@@ -147,19 +147,22 @@ export async function edit_profile(user) {
   return data;
 }
 
-export async function fetch_breweries(args) {
-  let query_str = Object.keys(args)
-    .map(arg => `${encodeURIComponent(arg)}=${encodeURIComponent(args[arg])}`)
+function brewery_query_str(args) {
+  return Object.keys(args)
+    .map(arg => `${encodeURIComponent(arg)}=${encodeURIComponent(typeof args[arg] === 'object' ? 
+                                                                  JSON.stringify(args[arg]) : 
+                                                                  args[arg])}`)
     .join("&");
-  console.log(query_str);
+}
+
+export async function fetch_breweries(args) {
+  if (!args.coords && !args.searchTerm && !args.favorite && !args.locationStr) return;
+  let query_str = brewery_query_str(args);
   return api_get(`/breweries?${query_str}`).then((data) => {
     if (data.data) {
-      let data1 = data.data;
-      let breweriesToShow = uniqBy(data.data.results, b => b.id);
-      data1.results = breweriesToShow;
       let action = {
         type: 'results/set',
-        data: data1
+        data: data.data
       }
       store.dispatch(action);
     }
@@ -167,18 +170,16 @@ export async function fetch_breweries(args) {
 }
 
 export async function next_breweries() {
+  let args = store.getState()?.filters;
   let results = store.getState()?.results;
-  if (!results) return;
-  console.log("results", results)
-  let query_str = `query=${results.query}&page=${results.page}`;
-  console.log(query_str);
+  if (!results || !args) return;
+  let query_str = brewery_query_str(Object.assign({}, args, {page: results.page + 1}));
   return api_get(`/breweries?${query_str}`).then((data) => {
     if (data.data) {
-      let breweries = results.results;
-      breweries = uniqBy(breweries.concat(data.data.results), b => b.id);
+      let breweries = results.results.concat(data.data.results);
       let action = {
         type: 'results/set',
-        data: {page: data.data.page, query: data.data.query, results: breweries}
+        data: Object.assign({}, data.data, { results: breweries })
       }
       store.dispatch(action);
     }
@@ -186,9 +187,42 @@ export async function next_breweries() {
   })
 }
 
+export async function fetch_brewery(id) {
+  let data = await api_get(`/breweries/${id}`);
+  if (data.brewery) {
+    let action = {
+      type: 'brewery/set',
+      data: data.brewery
+    }
+    store.dispatch(action);
+  }
+  return data;
+}
+
+export async function fetch_reviews(breweryId, page) {
+  let data = await api_get(`/breweries/${breweryId}/reviews?page=${page}`);
+  return data.data;
+}
+
+export function favorite_brewery(breweryId, favorite) {
+  api_patch(`/breweries/${breweryId}`, { favorite });
+}
+
+export async function create_review(breweryId, stars, body) {
+  let data = await api_post(`/breweries/${breweryId}/reviews`, { stars: stars, body: body });
+  dispatch_banners(data);
+  return data.review_id;
+}
+
+export async function update_review(reviewId, breweryId, stars, body) {
+  let data = await api_patch(`/breweries/${breweryId}/reviews/${reviewId}`, {review: { stars: stars, body: body }})
+  dispatch_banners(data);
+}
+
 export function pfp_path(hash) {
   return process.env.REACT_APP_API_URL + `/photos/${hash}`;
 }
 
 export function init_state() {
+  fetch_profile();
 }

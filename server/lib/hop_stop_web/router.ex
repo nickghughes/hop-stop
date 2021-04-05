@@ -37,11 +37,10 @@ defmodule HopStopWeb.Router do
 
     resources "/users", UserController, except: [:new, :edit, :create]
     resources "/friends", FriendController, except: [:new, :edit]
-    resources "/favorites", FavoriteController, except: [:new, :edit]
-    resources "/ratings", RatingController, except: [:new, :edit]
-    resources "/comments", CommentController, except: [:new, :edit]
     resources "/meetmeheres", MeetMeHereController, except: [:new, :edit]
-    resources "/breweries", BreweryController, only: [:index]
+    resources "/breweries", BreweryController, only: [:index, :show, :update] do
+      resources "/reviews", ReviewController, except: [:new, :edit]
+    end
   end
 
   # Other scopes may use custom stacks.

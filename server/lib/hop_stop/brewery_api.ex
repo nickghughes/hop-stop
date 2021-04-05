@@ -4,13 +4,31 @@
 # - Then, we want to get breweries based on the code
 # - I'm a fan of infinite scroll, so once we run out of options, broaden the search
 #   - i.e. start with postal code, then city, then state, then country
-defmodule HopStop.Search do
+defmodule HopStop.BreweryApi do
+  def get_brewery(id) do
+    headers = api_headers
+    resp = HTTPoison.get!(api_url <> "/" <> id, headers)
+    result = Jason.decode! resp.body
+    result
+    |> Map.replace("state", state_abbrevs()[result["state"]])
+  end
+
+  def get_ids(ids) do
+    id_str = ids
+    |> Enum.join(",")
+    get_breweries("?by_ids=" <> id_str)
+  end
+
+  def by_search_term(query) do
+    headers = api_headers
+    resp = HTTPoison.get!(api_url() <> "/search?#{URI.encode_query(%{"query" => query})}", headers)
+    results = Jason.decode! resp.body
+    Enum.map(results, fn x -> Map.replace(x, "state", state_abbrevs()[x["state"]]) end)
+  end
+
   def get_breweries(query_str) do
-    headers = [
-      "x-rapidapi-key": System.get_env("BREWERY_API_KEY"),
-		  "x-rapidapi-host": "brianiswu-open-brewery-db-v1.p.rapidapi.com"
-    ]
-    resp = HTTPoison.get!("https://brianiswu-open-brewery-db-v1.p.rapidapi.com/breweries" <> query_str, headers, [{:timeout, :infinity}, {:recv_timeout, :infinity}])
+    headers = api_headers
+    resp = HTTPoison.get!(api_url() <> query_str, headers)
     results = Jason.decode! resp.body
     Enum.map(results, fn x -> Map.replace(x, "state", state_abbrevs()[x["state"]]) end)
   end
@@ -18,71 +36,51 @@ defmodule HopStop.Search do
   # Should be called pseudo-recursively in iex for now
   # Expanding search in this way is susceptible to dupes
   # This should be taken care of on the frontend at the cost of inconsistent page sizes
-  def get_breweries_by_location(location, query_str \\ nil, page \\ 1, results \\ []) do
+  def get_breweries_by_location(coords, page, type) do
     page_size = 10
-    query = query_str || "?by_postal=#{location["postal"]}&by_city=#{location["city"]}&by_state=#{location["state"]}"
-    full_query = if String.length(query) > 1 do
-      query <> "&per_page=#{page_size}&page=#{page}"
+    page = if page, do: String.to_integer(page), else: 1
+    query = "?by_dist=#{coords["lat"]},#{coords["lng"]}&per_page=#{page_size}"
+    query = if type do
+      query <> "&by_type=#{type}"
     else
-      query <> "per_page=#{page_size}&page=#{page}"
+      query
     end
-    IO.inspect full_query
-
-    results = results ++ get_breweries full_query
-
-    [_ | broadened_query_terms] = String.split(query, "&")
-    broadened_query = "?" <> Enum.join(broadened_query_terms, "&")
-
-    cond do
-      length(results) < page_size and String.length(query) > 0 -> 
-        get_breweries_by_location(location, broadened_query, 1, results)
-      true -> %{"page" => page, "query" => query, "results" => results}
-    end
-  end
-
-  def get_next_page(prev_result_hash) do
-    get_breweries_by_location(nil, prev_result_hash.query, String.to_integer(prev_result_hash.page)+1)
-  end
-
-  def lat_lng_to_location_hierarchy(latitude, longitude) do
-    resp = HTTPoison.get!("http://www.mapquestapi.com/geocoding/v1/reverse?key=#{System.get_env("MAPQUEST_API_KEY")}&location=#{latitude},#{longitude}")
-    data = Jason.decode!(resp.body)
-    location = data["results"]
-    |> List.first
-    |> Map.get("locations")
-    |> List.first
-    %{
-      "postal" => List.first(String.split(location["postalCode"], "-")), 
-      "city" => location["adminArea5"], 
-      "state" => state_names()[location["adminArea3"]]
-    }
-  end
-
-  def location_to_breweries(%{"lat" => latitude, "lng" => longitude}) do
-    location = lat_lng_to_location_hierarchy(latitude, longitude)
-    get_breweries_by_location(location)
+    results = get_breweries query <> "&page=#{page}"
+    %{"results" => results, "coords" => coords, page: page}
   end
 
   def location_to_breweries(args) do
-    args = if args["by_state"] do
-      Map.replace(args, "by_state", state_names()[args["by_state"]] || args["by_state"])
-    else
-      args
-    end
+    coords = if args["coords"], do: Jason.decode!(args["coords"]), else: geocode_location_str(args["locationStr"])
+    get_breweries_by_location(coords, args["page"], args["type"])
+  end
 
-    query_args = args
-    |> Map.to_list
-    |> Enum.map(fn {key, val} -> "#{key}=#{val}" end)
-    |> Enum.join("&")
-    IO.inspect "?" <> query_args
-    get_breweries_by_location(nil, "?" <> query_args)
+  defp api_url do
+    "https://brianiswu-open-brewery-db-v1.p.rapidapi.com/breweries"
+  end
+
+  defp api_headers do
+    [
+      "x-rapidapi-key": System.get_env("BREWERY_API_KEY"),
+		  "x-rapidapi-host": "brianiswu-open-brewery-db-v1.p.rapidapi.com",
+      "useQueryString": true
+    ]
+  end
+
+  defp geocode_location_str(location_str) do
+    resp = HTTPoison.get!(URI.encode("http://www.mapquestapi.com/geocoding/v1/address?key=#{System.get_env("MAPQUEST_API_KEY")}&location=#{location_str}"))
+    data = Jason.decode!(resp.body)
+    data["results"]
+    |> List.first
+    |> Map.get("locations")
+    |> List.first
+    |> Map.get("latLng")
   end
 
   # Taken from https://stackoverflow.com/questions/11005751/is-there-a-util-to-convert-us-state-name-to-state-code-eg-arizona-to-az/11006236
   # (With some slight edits to convert to elixir)
   # This would be a const somewhere in a non proof-of-concept
   # Lots of these aren't even technically in the US so I will eventually filter them out
-  def state_abbrevs do
+  defp state_abbrevs do
     %{}
       |> Map.put("Alabama","AL")
       |> Map.put("Alaska","AK")
@@ -156,10 +154,4 @@ defmodule HopStop.Search do
       |> Map.put("Wyoming","WY")
       |> Map.put("Yukon Territory","YT")
   end
-
-  def state_names do
-    state_abbrevs
-    |> Map.new(fn {key, val} -> {val, key} end)
-  end
-
 end

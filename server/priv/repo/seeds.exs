@@ -12,6 +12,7 @@
 
 alias HopStop.Repo
 alias HopStop.Users.User
+alias HopStop.Reviews.Review
 
 defmodule Inject do
   def user(name, email, bio, pass) do
@@ -21,3 +22,5 @@ defmodule Inject do
 end
 
 rod = Inject.user("rod", "rod@test.com", "bio", "testrod")
+
+Repo.insert!(%Review{stars: 4, body: "This place is alright", user_id: rod.id, brewery_id: 11654})

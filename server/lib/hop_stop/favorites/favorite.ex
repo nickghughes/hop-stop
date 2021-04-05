@@ -14,7 +14,7 @@ defmodule HopStop.Favorites.Favorite do
   @doc false
   def changeset(favorite, attrs) do
     favorite
-    |> cast(attrs, [:brewery_id, :active])
-    |> validate_required([:brewery_id, :active])
+    |> cast(attrs, [:brewery_id, :active, :user_id])
+    |> validate_required([:brewery_id, :active, :user_id])
   end
 end

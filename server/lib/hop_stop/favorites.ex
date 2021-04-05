@@ -37,6 +37,8 @@ defmodule HopStop.Favorites do
   """
   def get_favorite!(id), do: Repo.get!(Favorite, id)
 
+  def get_favorite_by_user_brewery(user_id, brewery_id), do: Repo.get_by(Favorite, user_id: user_id, brewery_id: brewery_id)
+
   @doc """
   Creates a favorite.
 
@@ -100,5 +102,12 @@ defmodule HopStop.Favorites do
   """
   def change_favorite(%Favorite{} = favorite, attrs \\ %{}) do
     Favorite.changeset(favorite, attrs)
+  end
+
+  def get_by_user(user_id, page) do
+    Repo.all from f in Favorite,
+      where: f.user_id == ^user_id,
+      limit: 10,
+      offset: 10 * ^page
   end
 end
