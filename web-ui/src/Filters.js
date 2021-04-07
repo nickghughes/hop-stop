@@ -135,7 +135,7 @@ function Filters({filters, dispatch, onChange}) {
             </Col>
             <Col xs={8}>
               <InputGroup>
-                <Form.Control type="text" placeholder="Enter 'City, State' or ZIP" value={locationStr} onChange={(ev) => setLocationStr(ev.target.value)}/>
+                <Form.Control type="text" placeholder="Enter Location" value={locationStr} onChange={(ev) => setLocationStr(ev.target.value)}/>
                 <InputGroup.Append>
                   <Button variant="info" disabled={locationStr.length === 0} onClick={setLocation}>Apply</Button>
                 </InputGroup.Append>

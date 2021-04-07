@@ -2,8 +2,8 @@ import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { favorite_brewery, fetch_brewery } from "./api";
-import { Row, Col, Spinner } from "react-bootstrap";
-import { Star, StarFill } from "react-bootstrap-icons";
+import { Row, Col, Spinner, Button } from "react-bootstrap";
+import { Star, StarFill, ArrowLeft } from "react-bootstrap-icons";
 import GoogleMapReact from 'google-map-react';
 import MapMarker from './MapMarker';
 import ReviewSection from './ReviewSection';
@@ -52,9 +52,35 @@ function BreweryShow({ brewery, dispatch }) {
     return null;
   }
 
+  function goBack() {
+    history.push("/");
+  }
+
+  function inviteFriends() {
+    let action = {
+      type: 'meetConfig/set',
+      data: {
+        show: true,
+        brewery: {
+          id: brewery.id,
+          name: brewery.name
+        }
+      }
+    }
+    dispatch(action);
+  }
+
   if (!brewery) return <Row><Col className="text-center"><Spinner animation="border" variant="primary" className="my-5" /></Col></Row>;
 
   return <div>
+    <Row className="mb-4">
+      <Col xs={6}>
+        <Button onClick={goBack} className="mr-3"><span><ArrowLeft className="mb-1" /> Back to Home </span></Button>
+      </Col>
+      <Col xs={6} className="text-right">
+        <Button variant="success" onClick={inviteFriends}>Invite Friends</Button>
+      </Col>
+    </Row>
     <Row>
       {brewery.latitude && brewery.longitude && 
         <Col md={5}>
@@ -84,7 +110,7 @@ function BreweryShow({ brewery, dispatch }) {
         </Row>
         <Row className="mb-3">
           <Col>
-            <h6><a href={brewery.website_url} target="_blank">{brewery.website_url}</a></h6>
+            <h6><a href={brewery.website_url} target="_blank" rel="noreferrer">{brewery.website_url}</a></h6>
           </Col>
         </Row>
         <Row className="mb-2">

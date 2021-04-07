@@ -82,4 +82,16 @@ defmodule HopStopWeb.BreweryController do
         Jason.encode!(%{})
       )
   end
+
+  def autocomplete(conn, %{"query" => query}) do
+    results = BreweryApi.autocomplete_breweries query
+    conn
+    |> put_resp_header(
+      "content-type",
+      "application/json; charset=UTF-8")
+    |> send_resp(
+      200,
+      Jason.encode!(%{results: results})
+    )
+  end
 end

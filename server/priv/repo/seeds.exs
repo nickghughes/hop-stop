@@ -13,6 +13,7 @@
 alias HopStop.Repo
 alias HopStop.Users.User
 alias HopStop.Reviews.Review
+alias HopStop.Friends.Friend
 
 defmodule Inject do
   def user(name, email, bio, pass) do
@@ -22,5 +23,10 @@ defmodule Inject do
 end
 
 rod = Inject.user("rod", "rod@test.com", "bio", "testrod")
+pam = Inject.user("pam", "pam@test.com", "bio", "testpam")
+bob = Inject.user("bob", "bob@test.com", "bio", "testbob")
 
 Repo.insert!(%Review{stars: 4, body: "This place is alright", user_id: rod.id, brewery_id: 11654})
+
+Repo.insert!(%Friend{friender_id: rod.id, friendee_id: pam.id, accepted: true})
+Repo.insert!(%Friend{friender_id: bob.id, friendee_id: rod.id, accepted: true})

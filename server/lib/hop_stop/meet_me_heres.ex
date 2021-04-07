@@ -101,4 +101,18 @@ defmodule HopStop.MeetMeHeres do
   def change_meet_me_here(%MeetMeHere{} = meet_me_here, attrs \\ %{}) do
     MeetMeHere.changeset(meet_me_here, attrs)
   end
+
+  def bulk_insert(meet_me_heres) do
+    now = NaiveDateTime.utc_now
+    |> NaiveDateTime.truncate(:second)
+    meet_me_heres = meet_me_heres
+    |> Enum.map(
+      fn row ->
+        row
+        |> Map.put(:inserted_at, now)
+        |> Map.put(:updated_at, now)
+      end
+    )
+    Repo.insert_all(MeetMeHere, meet_me_heres)
+  end
 end

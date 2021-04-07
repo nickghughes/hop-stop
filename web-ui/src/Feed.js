@@ -5,6 +5,7 @@ import { next_breweries } from './api';
 import { Row, Col, Spinner, Card, Button } from 'react-bootstrap';
 import Filters from './Filters';
 import { useHistory } from 'react-router-dom';
+import { capitalize } from 'lodash';
 
 function BreweryListing({ brewery }) {
   let history = useHistory();
@@ -20,7 +21,7 @@ function BreweryListing({ brewery }) {
         <Col md={8}>
           <Card.Text className="mb-0"> {brewery.street} </Card.Text>
           <Card.Text> {brewery.city}, {brewery.state} {brewery.postal_code.split("-")[0]}</Card.Text>
-          <Card.Subtitle><small><b>Type: </b> {brewery.brewery_type}</small> </Card.Subtitle>
+          <Card.Subtitle><small><b>Type: </b> {capitalize(brewery.brewery_type)}</small></Card.Subtitle>
         </Col>
         <Col md={4}>
           <Button variant="info" onClick={showBrewery}>View</Button>
@@ -55,20 +56,23 @@ function Feed({ breweries, filters }) {
           <Filters onChange={() => setDone(false)}/>
         </Col>
       </Row>
-      <Row>
+      <Row style={{height: feedHeight}}>
         {breweries ?
           <Col>
-            <InfiniteScroll
-              dataLength={breweries.length}
-              next={nextPage}
-              hasMore={!done}
-              height={feedHeight}
-              loader={<Row className="text-center"><Spinner animation="border" variant="primary"/></Row>}
-            >
-              {breweries.map(b => <BreweryListing brewery={b} key={b.id}/>)}
-            </InfiniteScroll>
+            {breweries.length ?
+              <InfiniteScroll
+                dataLength={breweries.length}
+                next={nextPage}
+                hasMore={!done}
+                height={feedHeight}
+                loader={<div className="text-center"><Spinner animation="border" variant="primary"/></div>}
+              >
+                {breweries.map(b => <BreweryListing brewery={b} key={b.id}/>)}
+              </InfiniteScroll>
+              : <div className="text-center mt-5"><h3>No results.</h3></div>
+            }
           </Col> :
-          <Col style={{height: feedHeight}} className="text-center">
+          <Col className="text-center">
             {
               (filters.coords || filters.locationStr || filters.favorite) ?
                 <Spinner animation="border" variant="primary" className="mt-5"/> :

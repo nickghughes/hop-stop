@@ -54,6 +54,12 @@ defmodule HopStop.BreweryApi do
     get_breweries_by_location(coords, args["page"], args["type"])
   end
 
+  def autocomplete_breweries(query) do
+    headers = api_headers
+    resp = HTTPoison.get!(api_url() <> "/autocomplete?query=#{URI.encode(query)}", headers)
+    Jason.decode! resp.body
+  end
+
   defp api_url do
     "https://brianiswu-open-brewery-db-v1.p.rapidapi.com/breweries"
   end

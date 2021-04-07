@@ -38,6 +38,7 @@ defmodule HopStopWeb.Router do
     resources "/users", UserController, except: [:new, :edit, :create]
     resources "/friends", FriendController, except: [:new, :edit]
     resources "/meetmeheres", MeetMeHereController, except: [:new, :edit]
+    get "/autocomplete", BreweryController, :autocomplete
     resources "/breweries", BreweryController, only: [:index, :show, :update] do
       resources "/reviews", ReviewController, except: [:new, :edit]
     end

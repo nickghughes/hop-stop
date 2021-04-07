@@ -113,4 +113,18 @@ defmodule HopStop.Users do
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
   end
+
+  def get_user_by_email(email) do
+    Repo.get_by(User, email: email)
+  end
+
+  def get_user_with_friends!(id) do
+    Repo.get!(User, id)
+    |> Repo.preload [:friendees, :frienders, [pending_friendships: :friendee], [pending_friend_requests: :friender]]
+  end
+
+  def get_user_with_meet_me_heres!(id) do
+    Repo.get!(User, id)
+    |> Repo.preload [[incoming_invites: :user], [outgoing_invites: :rec]]
+  end
 end

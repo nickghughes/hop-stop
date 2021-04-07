@@ -69,7 +69,7 @@ export async function api_login(email, password) {
       }
       store.dispatch(action);
     }
-    fetch_profile();
+    init_state();
     dispatch_banners(data);
     return data;
   });
@@ -96,6 +96,7 @@ export async function api_register(user) {
     }
     store.dispatch(action);
   }
+  init_state();
   dispatch_banners(data);
   return data;
 }
@@ -218,10 +219,81 @@ export async function update_review(reviewId, breweryId, stars, body) {
   dispatch_banners(data);
 }
 
+export async function fetch_friends() {
+  let data = await api_get(`/friends`);
+  let action = {
+    type: 'friends/set',
+    data: data
+  }
+  store.dispatch(action);
+}
+
+export async function send_friend_request(email) {
+  let data = await api_post(`/friends`, {email: email.toLowerCase().trim()})
+  
+  if (data.user) {
+    let friends1 = Object.assign({}, store.getState()?.friends || {pending_friends: []});
+    friends1.pending_friends = friends1.pending_friends.concat([data.user])
+
+    let action = {
+      type: "friends/set",
+      data: friends1
+    }
+    store.dispatch(action);
+  }
+
+  dispatch_banners(data);
+}
+
+export async function respond_friend_request(request, response) {
+  let data = await api_patch(`/friends/${request.id}`, { response });
+  dispatch_banners(data);
+
+  let f = store.getState()?.friends;
+  if (!f) return;
+
+  let friends1 = Object.assign({}, f);
+  friends1.pending_requests = friends1.pending_requests.filter(r => r.id !== request.id);
+  if (response) {
+    friends1.friends = friends1.friends.concat([{id: request.user_id, name: request.name, email: request.email}])
+  }
+
+  let action = {
+    type: "friends/set",
+    data: friends1
+  }
+  store.dispatch(action);
+}
+
+export async function fetch_meet_me_heres() {
+  let data = await api_get(`/meetmeheres`);
+  let action = {
+    type: 'meetMeHeres/set',
+    data: data
+  }
+  store.dispatch(action);
+}
+
+export async function autocomplete_breweries(query) {
+  return await api_get(`/autocomplete?query=${query}`);
+}
+
+export async function send_meet_me_heres(brewery_id, user_ids) {
+  let data = await api_post(`/meetmeheres`, { brewery_id, user_ids });
+  dispatch_banners(data);
+  return data;
+}
+
+export async function dismiss_meet_me_here(meet_id) {
+  return await api_patch(`/meetmeheres/${meet_id}`);
+}
+
 export function pfp_path(hash) {
   return process.env.REACT_APP_API_URL + `/photos/${hash}`;
 }
 
 export function init_state() {
   fetch_profile();
+  fetch_friends();
+  fetch_meet_me_heres();
 }

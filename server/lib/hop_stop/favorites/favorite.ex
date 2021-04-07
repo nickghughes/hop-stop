@@ -6,7 +6,7 @@ defmodule HopStop.Favorites.Favorite do
     field :active, :boolean, default: false
     field :brewery_id, :integer
 
-    belongs_to :user, HopStopWeb.Users.User
+    belongs_to :user, HopStop.Users.User
 
     timestamps()
   end

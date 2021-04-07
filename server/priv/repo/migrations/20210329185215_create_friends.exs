@@ -12,6 +12,6 @@ defmodule HopStop.Repo.Migrations.CreateFriends do
 
     create index(:friends, [:friender_id])
     create index(:friends, [:friendee_id])
-    create index(:friends, [:friender_id, :friendee_id])
+    create unique_index(:friends, [:friender_id, :friendee_id])
   end
 end

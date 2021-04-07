@@ -3,8 +3,9 @@ defmodule HopStop.Friends.Friend do
   import Ecto.Changeset
 
   schema "friends" do
-    belongs_to :friender, HopStopWeb.Users.User
-    belongs_to :friendee, HopStopWeb.Users.User
+    field :accepted, :boolean
+    belongs_to :friender, HopStop.Users.User
+    belongs_to :friendee, HopStop.Users.User
 
     timestamps()
   end
@@ -12,7 +13,7 @@ defmodule HopStop.Friends.Friend do
   @doc false
   def changeset(friend, attrs) do
     friend
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:friender_id, :friendee_id, :accepted])
+    |> validate_required([:friender_id, :friendee_id])
   end
 end

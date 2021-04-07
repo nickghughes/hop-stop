@@ -139,9 +139,42 @@ function brewery(state = null, action) {
   }
 }
 
+function friends(state = null, action) {
+  switch (action.type) {
+    case 'friends/set':
+      return action.data;
+    case 'session/clear':
+      return null;
+    default:
+      return state;
+  }
+}
+
+function meetMeHeres(state = null, action) {
+  switch (action.type) {
+    case 'meetMeHeres/set':
+      return action.data;
+    case 'session/clear':
+      return null;
+    default:
+      return state;
+  }
+}
+
+function meetConfig(state = null, action) {
+  switch (action.type) {
+    case 'meetConfig/set':
+      return action.data;
+    case 'sessions/clear':
+      return null;
+    default:
+      return state;
+  }
+}
+
 function root_reducer(state, action) {
   let redu = combineReducers(
-    {session, error, info, success, user, results, breweries, coords, filters, brewery}
+    {session, error, info, success, user, results, breweries, coords, filters, brewery, friends, meetMeHeres, meetConfig}
   );
 
   return redu(state, action);
