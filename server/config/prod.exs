@@ -10,7 +10,7 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :hop_stop, HopStopWeb.Endpoint,
-  url: [host: "example.com", port: 80]
+  url: [host: "hopstop.grumdog.com", port: 80]
 
 # Do not print debug messages in production
 config :logger, level: :info
