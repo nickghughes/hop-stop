@@ -9,8 +9,6 @@ echo "Building..."
 
 mix deps.get
 mix compile
-(cd assets && npm install)
-(cd assets && webpack --mode production)
 mix phx.digest
 
 mix ecto.migrate
