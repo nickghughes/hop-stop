@@ -41,7 +41,7 @@ function TopBar({session, error, info, success}) {
     <div>
       <Row className="my-3">
         <Col xs={3}>
-          <img src={logo} style={{height: 70}} alt="logo"/>
+          <img src={logo} className="logo" alt="logo"/>
         </Col>
         {session && 
           <Col xs={{offset: 5, span: 4}}>

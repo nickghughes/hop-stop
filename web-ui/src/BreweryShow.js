@@ -8,6 +8,7 @@ import GoogleMapReact from 'google-map-react';
 import MapMarker from './MapMarker';
 import ReviewSection from './ReviewSection';
 import { clear_banners } from './store';
+import { capitalize } from 'lodash';
 
 function BreweryShow({ brewery, dispatch }) {
   const [favorite, setFavorite] = useState(false);
@@ -84,22 +85,22 @@ function BreweryShow({ brewery, dispatch }) {
             bootstrapURLKeys={{key: process.env.REACT_APP_MAPS_API_KEY}}
             defaultCenter={{lat: Number(brewery.latitude), lng: Number(brewery.longitude)}}
             defaultZoom={13}>
-              <MapMarker lat={brewery.latitude} lng={brewery.longitude} scale={2} key={`map${brewery.id}`} text={brewery.name} tipId={`marker${brewery.id}`}/>
+              <MapMarker lat={brewery.latitude} lng={brewery.longitude} key={`map${brewery.id}`} text={brewery.name} tipId={`marker${brewery.id}`}/>
           </GoogleMapReact>
         </Col>
       }
       <Col md={7}>  
         <Row>
           <Col className="text-right">
-            <b>Type: </b> {brewery.brewery_type}
+            <b>Type: </b> {capitalize(brewery.brewery_type)}
           </Col>
         </Row>
         <Row className="mb-4">
           <Col>
             <h2>{brewery.name}<span className="ml-3">
             { favorite ?
-              <StarFill style={{height: "0.75em", width: "0.75em", color: "yellow"}} onClick={() => toggleFavorite(false)} /> :
-              <Star style={{height: "0.75em", width: "0.75em"}} onClick={() => toggleFavorite(true)} />
+              <StarFill className="icon-sm star-fill" onClick={() => toggleFavorite(false)} /> :
+              <Star className="icon-sm" onClick={() => toggleFavorite(true)} />
             }
             </span></h2>
           </Col>

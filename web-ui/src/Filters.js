@@ -117,8 +117,8 @@ function Filters({filters, dispatch, onChange}) {
       </Col>
       <Col xs={1} className="pl-0 mt-1">
         { filters.favorite ?
-          <StarFill style={{height: "1.5em", width: "1.5em", color: "yellow"}} onClick={toggleFavorite} /> :
-          <Star style={{height: "1.5em", width: "1.5em"}} onClick={toggleFavorite} />
+          <StarFill className="icon-lg star-fill" onClick={toggleFavorite} /> :
+          <Star className="icon-lg" onClick={toggleFavorite} />
         }
       </Col>
     </Row>
@@ -128,7 +128,7 @@ function Filters({filters, dispatch, onChange}) {
             <Col xs={4} className="mt-1 mr-0 pr-0">
               <span><Button className="btn-sm" onClick={getLocation} disabled={filters.coords}>
                 {locationLoading ?
-                  <Spinner animation="border" variant="primary" style={{height:"1em", width: "1em"}} /> :
+                  <Spinner animation="border" variant="primary" className="spinner-sm" /> :
                   <small>Use My Location</small>
                 }
               </Button></span><span className="ml-2">or</span>
@@ -145,7 +145,7 @@ function Filters({filters, dispatch, onChange}) {
       </Col>
       <Col xs={2} className="pl-0 ml-0">
         <Dropdown>
-          <Dropdown.Toggle size="sm" variant="secondary"><FilterRight style={{height: "1.5em", width: "1.5em"}} className="mb-1 mr-1" /></Dropdown.Toggle>
+          <Dropdown.Toggle size="sm" variant="secondary"><FilterRight className="mb-1 mr-1 icon-lg" /></Dropdown.Toggle>
           <TypeFilter currentType={type} setType={updateType} />
         </Dropdown>
       </Col>

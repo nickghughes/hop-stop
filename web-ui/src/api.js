@@ -50,16 +50,6 @@ async function api_patch(path, data) {
   return resp;
 }
 
-async function api_delete(path) {
-  let opts = {
-    method: 'DELETE',
-    headers: Object.assign({
-      'Content-Type': 'application/json'
-    }, tokenHeader())
-  };
-  await fetch(api_path() + path, opts);
-}
-
 export async function api_login(email, password) {
   return api_post("/session", {email, password}).then((data) => {
     clear_banners();

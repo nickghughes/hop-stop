@@ -37,7 +37,7 @@ function FriendsList({ friends, dispatch }) {
     <Dropdown.Toggle variant="info"><People className="mb-1 mr-1" /></Dropdown.Toggle>
     <Dropdown.Menu align="right">
       <Dropdown.ItemText>
-      <InputGroup className="my-2" style={{width: "18em"}}>
+      <InputGroup className="my-2 friends-list">
           <Form.Control type="email" value={email} placeholder="Add friends..." onChange={(ev) => setEmail(ev.target.value)}/>
           <InputGroup.Append>
             <Button onClick={sendRequest}>Add</Button>
@@ -64,10 +64,10 @@ function FriendsList({ friends, dispatch }) {
               <b>{r.name}</b> ({r.email})
             </Col>
             <Col xs={2}>
-              <a href="#" onClick={(ev) => respondToRequest(ev, r, false)} className="text-danger"><X style={{height: "1.5em", width: "1.5em"}}/></a>
+              <a href="#" onClick={(ev) => respondToRequest(ev, r, false)} className="text-danger"><X className="icon-lg" /></a>
             </Col>
             <Col xs={2}>
-              <a href="#" onClick={(ev) => respondToRequest(ev, r, true)} className="text-success"><Check style={{height: "1.5em", width: "1.5em"}} /></a>
+              <a href="#" onClick={(ev) => respondToRequest(ev, r, true)} className="text-success"><Check className="icon-lg" /></a>
             </Col>
           </Row>
         </Dropdown.ItemText>

@@ -47,7 +47,7 @@ function MeetDropdown({ meetMeHeres, dispatch }) {
   return (
     <Dropdown as={ButtonGroup}>
       <Dropdown.Toggle variant="success"><Map className="mb-1 mr-1" /></Dropdown.Toggle>
-      <Dropdown.Menu align="right" style={{width: "40em"}}>
+      <Dropdown.Menu align="right" className="meet-me-here-list">
         <Dropdown.ItemText className="px-5">
           <Button variant="primary" className="btn-block" onClick={startMeetFlow}>Invite friend(s) to meet</Button>
         </Dropdown.ItemText>

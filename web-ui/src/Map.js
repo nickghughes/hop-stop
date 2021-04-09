@@ -57,17 +57,17 @@ function Map({coords, breweries}) {
   }
 
   return (
-    <div ref={mapRef} style={{height:"100%"}}>
+    <div ref={mapRef} className="h-100">
       <GoogleMapReact
         bootstrapURLKeys={{key: process.env.REACT_APP_MAPS_API_KEY}}
         center={c}
         zoom={z}
       >
         {coords &&
-          <MapMarker lat={coords.lat} lng={coords.lng} color="red" scale={2.5} tipId="self" text="You are here" />
+          <MapMarker lat={coords.lat} lng={coords.lng} color="red" tipId="self" text="You are here" />
         }
         {breweries &&
-          breweries.map(b => (b.latitude && b.longitude) ? <MapMarker lat={b.latitude} lng={b.longitude} scale={2} key={`map${b.id}`} text={b.name} tipId={`marker${b.id}`}/> : null)
+          breweries.map(b => (b.latitude && b.longitude) ? <MapMarker lat={b.latitude} lng={b.longitude} key={`map${b.id}`} text={b.name} tipId={`marker${b.id}`}/> : null)
         }
       </GoogleMapReact>
     </div>

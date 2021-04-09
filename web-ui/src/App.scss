@@ -1,1 +1,41 @@
 @import "~bootstrap/scss/bootstrap";
+
+.spinner-sm {
+  height: 1em;
+  width: 1em;
+}
+
+.icon-sm {
+  height: 0.75em;
+  width: 0.75em;
+}
+
+.icon-lg {
+  height: 1.5em;
+  width: 1.5em;
+}
+
+.icon-xl {
+  height: 2.5em;
+  width: 2.5em;
+}
+
+.star-fill {
+  color: yellow;
+}
+
+.friends-list {
+  width: 18em;
+}
+
+.meet-me-here-list {
+  width: 40em;
+}
+
+.logo {
+  height: 70;
+}
+
+.review-pfp {
+  max-height: 3rem;
+}

@@ -10,8 +10,8 @@ function StarInput({ stars, setStars }) {
     {
       [1,2,3,4,5].map(n => 
         stars >= n ?
-          <StarFill style={{height: "2.5em", width: "2.5em", color: "yellow"}} onClick={() => setStars(n)} key={n}/> :
-          <Star style={{height: "2.5em", width: "2.5em"}} onClick={() => setStars(n)} key={n} />
+          <StarFill className="icon-xl star-fill" onClick={() => setStars(n)} key={n}/> :
+          <Star className="icon-xl" onClick={() => setStars(n)} key={n} />
       )
     }
   </div>
@@ -41,7 +41,7 @@ function ReviewForm({ breweryId, myReview, user }) {
     <Row>
       <Col md={1} className="text-right">
         { user?.pfp_hash &&
-          <Image style={{maxHeight: "3rem"}} src={pfp_path(user.pfp_hash)} />
+          <Image className="review-pfp" src={pfp_path(user.pfp_hash)} />
         }
       </Col>
       <Col md={11}>
@@ -63,8 +63,8 @@ function StarDisplay({ stars }) {
     {
       [1,2,3,4,5].map(n => 
         stars >= n ?
-          <StarFill style={{height: "2em", width: "2em", color: "yellow"}} key={n}/> :
-          <Star style={{height: "2em", width: "2em"}} key={n}/>
+          <StarFill className="icon-lg star-fill" key={n}/> :
+          <Star className="icon-lg" key={n}/>
       )
     }
   </div>
@@ -74,7 +74,7 @@ function ReviewBlock({ review }) {
   return <Row className="my-2">
     <Col md={1}>
       { review.user.pfp_hash &&
-        <Image style={{maxHeight: "3rem"}} src={pfp_path(review.user.pfp_hash)} />
+        <Image className="review-pfp" src={pfp_path(review.user.pfp_hash)} />
       }
     </Col>
     <Col md={11}>

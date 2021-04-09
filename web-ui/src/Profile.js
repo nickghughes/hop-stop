@@ -61,7 +61,7 @@ function ViewProfile({ user }) {
     <Row className={user.pfp_hash ? "" : "text-center"}>
       { user.pfp_hash &&
         <Col md={{span: 2, offset: 4}}>
-          <Image style={{width: "100%"}} src={pfp_path(user.pfp_hash)} />
+          <Image className="w-100" src={pfp_path(user.pfp_hash)} />
         </Col>
       }
       <Col>

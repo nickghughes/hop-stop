@@ -104,7 +104,7 @@ function BreweryAutocomplete({ meetConfig, friends, dispatch }) {
     body = <div>
         <div className="text-right">
           <Button variant="link" className="btn-sm" onClick={selectAll}>Select all</Button>
-          <Button variant="link" className="btn-sm" onClick={clearSelections} style={{color: "red"}}>Clear</Button>
+          <Button variant="link text-danger" className="btn-sm" onClick={clearSelections}>Clear</Button>
         </div>
         <Multiselect 
           options={friends?.friends || []}

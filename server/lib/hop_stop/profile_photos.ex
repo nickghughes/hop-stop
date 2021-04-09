@@ -17,8 +17,7 @@ defmodule HopStop.ProfilePhotos do
     save_photo(name, data, hash, meta)
   end
 
-  #  DATA RACE!?!??!?!
-  def save_photo(name, data, hash, meta) do
+  def save_photo(_, data, hash, meta) do
     meta = Map.update!(meta, :refs, &(&1 + 1))
     File.write!(meta_path(hash), Jason.encode!(meta))
     File.write!(data_path(hash), data)
@@ -31,8 +30,6 @@ defmodule HopStop.ProfilePhotos do
     |> Jason.decode!
     {:ok, Map.get(meta, :name), data}
   end
-
-  # TODO: drop_photo
 
   def read_meta(hash) do
     with {:ok, data} <- File.read(meta_path(hash)),
