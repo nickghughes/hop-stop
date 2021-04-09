@@ -45,8 +45,10 @@ defmodule HopStop.ProfilePhotos do
   end
 
   def base_path(hash) do
+    sys_env = System.get_env("MIX_ENV")
+    sys_env = if sys_env, do: sys_env, else: Mix.env
     Path.expand("~/.local/data/hop_stop")
-    |> Path.join(Application.get_env(:hop_stop, :mix_env))
+    |> Path.join("#{env_name}")
     |> Path.join(String.slice(hash, 0, 2))
     |> Path.join(String.slice(hash, 2, 30))
   end
