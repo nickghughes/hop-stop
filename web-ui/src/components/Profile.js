@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Row, Col, Form, Button, Spinner, Image } from 'react-bootstrap';
 import { ArrowLeft } from 'react-bootstrap-icons';
-import { edit_profile, pfp_path } from './api';
-import { clear_banners } from './store';
+import { edit_profile, pfp_path } from '../api';
+import { clear_banners } from '../store';
 
 function EditProfile({ user, returnToView }) {
   const [pfp, setPfp] = useState();

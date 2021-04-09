@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { create_review, fetch_reviews, pfp_path, update_review } from "./api";
+import { create_review, fetch_reviews, pfp_path, update_review } from "../api";
 import { Row, Col, Form, Spinner, Card, Image, Button } from "react-bootstrap";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Star, StarFill } from 'react-bootstrap-icons';

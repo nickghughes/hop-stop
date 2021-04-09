@@ -1,13 +1,13 @@
-import logo from './logo.png';
+import logo from '../assets/logo.png';
 import { connect } from 'react-redux';
 import { PencilSquare, BoxArrowRight, PersonCircle } from 'react-bootstrap-icons';
 import { Row, Col, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import { clear_banners } from './store';
-import DismissibleAlert from './DismissibleAlert';
+import { clear_banners } from '../store';
+import DismissibleAlert from './util/DismissibleAlert';
 import FriendsList from './FriendsList';
 import MeetDropdown from './MeetDropdown';
-import { leave_channel } from './socket';
+import { leave_channel } from '../socket';
 
 let AccountDropdown = connect(({session}) => ({session}))(({session, dispatch}) => {
   let history = useHistory();

@@ -1,6 +1,6 @@
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import { api_login } from './api';
+import { api_login } from '../api';
 
 function Login() {
   const [email, setEmail] = useState("");

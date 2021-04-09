@@ -1,6 +1,6 @@
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import { api_register } from './api';
+import { api_register } from '../api';
 
 function Register() {
   const [pfp, setPfp] = useState();

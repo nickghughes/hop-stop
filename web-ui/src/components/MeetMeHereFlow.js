@@ -3,11 +3,11 @@ import { Multiselect } from 'multiselect-react-dropdown';
 import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { useState, useRef } from 'react';
-import { autocomplete_breweries, fetch_meet_me_heres, send_meet_me_heres } from './api';
+import { autocomplete_breweries, fetch_meet_me_heres, send_meet_me_heres } from '../api';
 
 const AsyncTypeahead = withAsync(Typeahead);
 
-function BreweryAutocomplete({ meetConfig, friends, dispatch }) {
+function MeetMeHereFlow({ meetConfig, friends, dispatch }) {
   const [loading, setLoading] = useState(false);
   const [options, setOptions] = useState();
 
@@ -143,4 +143,4 @@ function BreweryAutocomplete({ meetConfig, friends, dispatch }) {
   </Modal>
 }
 
-export default connect(({ meetConfig, friends }) => ({ meetConfig, friends }))(BreweryAutocomplete);
+export default connect(({ meetConfig, friends }) => ({ meetConfig, friends }))(MeetMeHereFlow);

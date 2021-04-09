@@ -1,13 +1,13 @@
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { favorite_brewery, fetch_brewery } from "./api";
+import { favorite_brewery, fetch_brewery } from "../api";
 import { Row, Col, Spinner, Button } from "react-bootstrap";
 import { Star, StarFill, ArrowLeft } from "react-bootstrap-icons";
 import GoogleMapReact from 'google-map-react';
-import MapMarker from './MapMarker';
+import MapMarker from './util/MapMarker';
 import ReviewSection from './ReviewSection';
-import { clear_banners } from './store';
+import { clear_banners } from '../store';
 import { capitalize } from 'lodash';
 
 function BreweryShow({ brewery, dispatch }) {

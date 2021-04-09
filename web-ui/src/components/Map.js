@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import GoogleMapReact, { fitBounds } from 'google-map-react';
 import { useRef } from 'react'
 import useBoundingclientrect from "@rooks/use-boundingclientrect";
-import MapMarker from './MapMarker';
+import MapMarker from './util/MapMarker';
 
 function Map({coords, breweries}) {
   const mapRef = useRef();

@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { Row, Col, Form, Button, InputGroup, Spinner, Dropdown } from "react-bootstrap";
 import { Star, StarFill, FilterRight } from "react-bootstrap-icons";
 import { useState } from "react";
-import { fetch_breweries } from "./api";
+import { fetch_breweries } from "../api";
 
 function TypeFilter({ currentType, setType }) {
   // Taken from API documentation

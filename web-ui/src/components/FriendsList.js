@@ -2,7 +2,7 @@ import { Dropdown, ButtonGroup, Form, InputGroup, Button, Row, Col } from 'react
 import { People, Map, Check, X } from 'react-bootstrap-icons';
 import { connect } from 'react-redux';
 import { useState } from 'react';
-import { respond_friend_request, send_friend_request } from './api';
+import { respond_friend_request, send_friend_request } from '../api';
 
 function FriendsList({ friends, dispatch }) {
   const [email, setEmail] = useState("");

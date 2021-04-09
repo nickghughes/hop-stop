@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
 import { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { next_breweries } from './api';
+import { next_breweries } from '../api';
 import { Row, Col, Spinner, Card, Button } from 'react-bootstrap';
 import Filters from './Filters';
 import { useHistory } from 'react-router-dom';
 import { capitalize } from 'lodash';
-import { clear_banners } from './store';
+import { clear_banners } from '../store';
 
 function BreweryListing({ brewery, dispatch }) {
   let history = useHistory();

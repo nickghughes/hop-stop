@@ -1,9 +1,9 @@
 import { connect } from "react-redux";
 import { Dropdown, ButtonGroup, Button, Row, Col } from "react-bootstrap";
 import { Map, X } from "react-bootstrap-icons";
-import { dismiss_meet_me_here } from "./api";
+import { dismiss_meet_me_here } from "../api";
 import { useHistory } from "react-router-dom";
-import { clear_banners } from "./store";
+import { clear_banners } from "../store";
 
 function MeetDropdown({ meetMeHeres, dispatch }) {
   let history = useHistory();
