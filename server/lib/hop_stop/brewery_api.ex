@@ -7,7 +7,7 @@
 defmodule HopStop.BreweryApi do
   def get_brewery(id) do
     headers = api_headers
-    resp = HTTPoison.get!(api_url <> "/" <> id, headers)
+    resp = HTTPoison.get!(api_url <> "/#{id}", headers)
     result = Jason.decode! resp.body
     result
     |> Map.replace("state", state_abbrevs()[result["state"]])

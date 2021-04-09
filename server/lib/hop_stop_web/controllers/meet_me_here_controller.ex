@@ -48,9 +48,25 @@ defmodule HopStopWeb.MeetMeHereController do
   def create(conn, %{"brewery_id" => brewery_id, "user_ids" => user_ids}) do
     user_id = conn.assigns[:current_user].id
     brewery_id = if is_bitstring(brewery_id), do: String.to_integer(brewery_id), else: brewery_id
+    brewery = HopStop.BreweryApi.get_brewery brewery_id
     meet_me_heres = user_ids
     |> Enum.map(fn id -> %{user_id: user_id, rec_id: id, brewery_id: brewery_id, dismissed: false} end)
-    MeetMeHeres.bulk_insert(meet_me_heres)
+    for params <- meet_me_heres do
+      with {:ok, %MeetMeHere{} = meet} <- MeetMeHeres.create_meet_me_here(params) do
+        HopStopWeb.Endpoint.broadcast("user:#{params.rec_id}", "meet_me_here_received", 
+                                %{
+                                  id: meet.id,
+                                  user_id: conn.assigns[:current_user].id,
+                                  name: conn.assigns[:current_user].name,
+                                  email: conn.assigns[:current_user].email,
+                                  date: MeetMeHere.date_display(meet),
+                                  brewery: %{
+                                    id: brewery["id"],
+                                    name: brewery["name"]
+                                  }
+                                })
+      end
+    end
     conn
     |> put_resp_header(
       "content-type",

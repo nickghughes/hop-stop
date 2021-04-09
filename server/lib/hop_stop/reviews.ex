@@ -104,9 +104,9 @@ defmodule HopStop.Reviews do
     Review.changeset(review, attrs)
   end
 
-  def reviews_to_user(user_id, page) do
+  def reviews_to_user(user_id, brewery_id, page) do
     Repo.all from r in Review,
-      where: (r.user_id != ^user_id),
+      where: (r.user_id != ^user_id and r.brewery_id == ^brewery_id),
       order_by: [desc: r.inserted_at],
       limit: 10,
       offset: 10 * ^page,

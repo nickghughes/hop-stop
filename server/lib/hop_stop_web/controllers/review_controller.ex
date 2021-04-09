@@ -7,7 +7,7 @@ defmodule HopStopWeb.ReviewController do
   action_fallback HopStopWeb.FallbackController
 
   def index(conn, %{"brewery_id" => brewery_id, "page" => page}) do
-    reviews = Reviews.reviews_to_user(conn.assigns[:current_user].id, String.to_integer(page))
+    reviews = Reviews.reviews_to_user(conn.assigns[:current_user].id, brewery_id, String.to_integer(page))
     render(conn, "index.json", reviews: reviews)
   end
 

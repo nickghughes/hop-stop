@@ -12,6 +12,7 @@
     "lodash": "^4.17.21",
     "multiselect-react-dropdown": "^1.6.11",
     "node-sass": "^5.0.0",
+    "phoenix": "^1.5.8",
     "react": "^16.8.0",
     "react-bootstrap": "^1.5.2",
     "react-bootstrap-icons": "^1.4.0",

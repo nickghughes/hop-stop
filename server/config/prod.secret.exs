@@ -35,7 +35,7 @@ config :hop_stop, HopStopWeb.Endpoint,
 # If you are doing OTP releases, you need to instruct Phoenix
 # to start each relevant endpoint:
 #
-#     config :hop_stop, HopStopWeb.Endpoint, server: true
+config :hop_stop, HopStopWeb.Endpoint, server: true
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.

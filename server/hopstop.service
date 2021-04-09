@@ -1,0 +1,18 @@
+[Unit]
+Description=Hop Stop
+
+[Service]
+Type=simple
+User=hopstop
+Group=hopstop
+Restart=on-failure
+Environment=MIX_ENV=prod
+Environment=PORT=4795
+Environment=PROD=true
+Environment=LANG=en_US.UTF-8
+
+WorkingDirectory=/home/hopstop/hop-stop/server
+ExecStart=/bin/bash /home/hopstop/hop-stop/server/start.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -6,11 +6,18 @@ import { Row, Col, Spinner, Card, Button } from 'react-bootstrap';
 import Filters from './Filters';
 import { useHistory } from 'react-router-dom';
 import { capitalize } from 'lodash';
+import { clear_banners } from './store';
 
-function BreweryListing({ brewery }) {
+function BreweryListing({ brewery, dispatch }) {
   let history = useHistory();
 
   function showBrewery() {
+    clear_banners();
+    let action = {
+      type: 'brewery/set',
+      data: null
+    }
+    dispatch(action)
     history.push(`/breweries/${brewery.id}`);
   }
 
@@ -31,7 +38,7 @@ function BreweryListing({ brewery }) {
   </Card>
 }
 
-function Feed({ breweries, filters }) {
+function Feed({ breweries, filters, dispatch }) {
   const [fetching, setFetching] = useState(false);
   const [done, setDone] = useState(false);
 
@@ -67,7 +74,7 @@ function Feed({ breweries, filters }) {
                 height={feedHeight}
                 loader={<div className="text-center"><Spinner animation="border" variant="primary"/></div>}
               >
-                {breweries.map(b => <BreweryListing brewery={b} key={b.id}/>)}
+                {breweries.map(b => <BreweryListing brewery={b} dispatch={dispatch} key={b.id}/>)}
               </InfiniteScroll>
               : <div className="text-center mt-5"><h3>No results.</h3></div>
             }

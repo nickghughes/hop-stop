@@ -1,41 +1,17 @@
 import { Dropdown, ButtonGroup, Form, InputGroup, Button, Row, Col } from 'react-bootstrap';
 import { People, Map, Check, X } from 'react-bootstrap-icons';
 import { connect } from 'react-redux';
-import { forwardRef, useState, Children } from 'react';
+import { useState } from 'react';
 import { respond_friend_request, send_friend_request } from './api';
 
 function FriendsList({ friends, dispatch }) {
+  const [email, setEmail] = useState("");
 
-  const CustomMenu = forwardRef(
-    ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
-      const [email, setEmail] = useState("");
-
-      function sendRequest() {
-        send_friend_request(email).then(() => {
-          setEmail("");
-        });
-      }
-
-      return (
-        <div
-          ref={ref}
-          style={style}
-          className={className}
-          aria-labelledby={labeledBy}
-        >
-          <InputGroup className="mx-3 my-2" style={{width: "16em"}}>
-            <Form.Control type="email" value={email} placeholder="Add friends..." onChange={(ev) => setEmail(ev.target.value)}/>
-            <InputGroup.Append>
-              <Button onClick={sendRequest}>Add</Button>
-            </InputGroup.Append>
-          </InputGroup>
-          <ul className="list-unstyled">
-            { Children.toArray(children) }
-          </ul>
-        </div>
-      );
-    },
-  );
+  function sendRequest() {
+    send_friend_request(email).then(() => {
+      setEmail("");
+    });
+  }
 
   function inviteFriend(ev, friend) {
     ev.preventDefault();
@@ -59,7 +35,15 @@ function FriendsList({ friends, dispatch }) {
   let addedFriends = friends?.friends || [];
   return <Dropdown as={ButtonGroup}>
     <Dropdown.Toggle variant="info"><People className="mb-1 mr-1" /></Dropdown.Toggle>
-    <Dropdown.Menu as={CustomMenu} align="right">
+    <Dropdown.Menu align="right">
+      <Dropdown.ItemText>
+      <InputGroup className="my-2" style={{width: "18em"}}>
+          <Form.Control type="email" value={email} placeholder="Add friends..." onChange={(ev) => setEmail(ev.target.value)}/>
+          <InputGroup.Append>
+            <Button onClick={sendRequest}>Add</Button>
+          </InputGroup.Append>
+        </InputGroup>
+      </Dropdown.ItemText>
       <Dropdown.Divider />
       <Dropdown.Header>Waiting for responses from:</Dropdown.Header>
       {pendingFriends.map(r => 

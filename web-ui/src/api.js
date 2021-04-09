@@ -1,5 +1,6 @@
 import { clear_banners, dispatch_banners } from './store';
 import store from './store';
+import { connect_channel } from './socket';
 
 function tokenHeader() {
   let token = store.getState()?.session?.token;
@@ -231,9 +232,9 @@ export async function fetch_friends() {
 export async function send_friend_request(email) {
   let data = await api_post(`/friends`, {email: email.toLowerCase().trim()})
   
-  if (data.user) {
+  if (data.friend) {
     let friends1 = Object.assign({}, store.getState()?.friends || {pending_friends: []});
-    friends1.pending_friends = friends1.pending_friends.concat([data.user])
+    friends1.pending_friends = friends1.pending_friends.concat([data.friend])
 
     let action = {
       type: "friends/set",
@@ -293,7 +294,11 @@ export function pfp_path(hash) {
 }
 
 export function init_state() {
-  fetch_profile();
-  fetch_friends();
-  fetch_meet_me_heres();
+  let user_id = store.getState()?.session?.user_id;
+  if (user_id) {
+    connect_channel(user_id);
+    fetch_profile();
+    fetch_friends();
+    fetch_meet_me_heres();
+  }
 }

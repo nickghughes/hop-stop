@@ -7,25 +7,20 @@ import { Star, StarFill, ArrowLeft } from "react-bootstrap-icons";
 import GoogleMapReact from 'google-map-react';
 import MapMarker from './MapMarker';
 import ReviewSection from './ReviewSection';
+import { clear_banners } from './store';
 
 function BreweryShow({ brewery, dispatch }) {
-  const [fetched, setFetched] = useState(false);
   const [favorite, setFavorite] = useState(false);
   let { id } = useParams();
   let history = useHistory();
 
   useEffect(() => {
-    if (!fetched) {
-      setFetched(true);
-      let action = {
-        type: 'brewery/set',
-        data: null
-      }
-      dispatch(action)
+    if (!brewery) {
       fetch_brewery(id).then((data) => {
         if (data.brewery) {
           setFavorite(data.brewery.favorite);
         } else if (data.error) {
+          clear_banners();
           history.push("/");
           let action = {
             type: "error/set",
@@ -35,7 +30,7 @@ function BreweryShow({ brewery, dispatch }) {
         }
       });
     }
-  });
+  }, [brewery]);
 
   function toggleFavorite(favorite) {
     favorite_brewery(brewery.id, favorite);
@@ -53,6 +48,7 @@ function BreweryShow({ brewery, dispatch }) {
   }
 
   function goBack() {
+    clear_banners();
     history.push("/");
   }
 

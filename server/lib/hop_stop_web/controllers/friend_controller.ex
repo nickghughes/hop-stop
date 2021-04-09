@@ -45,14 +45,21 @@ defmodule HopStopWeb.FriendController do
     user = Users.get_user_by_email(email)
     if user do
       friend_params = %{friender_id: conn.assigns[:current_user].id, friendee_id: user.id}
-      with {:ok, %Friend{} = _} <- Friends.create_friend(friend_params) do      
+      with {:ok, %Friend{} = friend} <- Friends.create_friend(friend_params) do
+        HopStopWeb.Endpoint.broadcast!("user:#{user.id}", "friend_request_received", 
+                                %{
+                                  id: friend.id,
+                                  user_id: conn.assigns[:current_user].id,
+                                  name: conn.assigns[:current_user].name,
+                                  email: conn.assigns[:current_user].email
+                                })
         conn
         |> put_resp_header(
           "content-type",
           "application/json; charset=UTF-8")
         |> send_resp(
           :created,
-          Jason.encode!(%{success: "Friend request sent!", user: %{id: user.id, name: user.name, email: user.email}})
+          Jason.encode!(%{success: "Friend request sent!", friend: %{id: friend.id, user_id: user.id, name: user.name, email: user.email}})
         )
       end
     else
@@ -71,6 +78,11 @@ defmodule HopStopWeb.FriendController do
     friend = Friends.get_friend!(id)
 
     with {:ok, %Friend{} = _} <- Friends.update_friend(friend, %{accepted: resp}) do
+      HopStopWeb.Endpoint.broadcast!("user:#{friend.friender_id}", "friend_request_responded", 
+                              %{
+                                id: friend.id,
+                                response: resp
+                              })
       conn
       |> put_resp_header(
         "content-type",

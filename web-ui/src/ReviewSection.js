@@ -63,8 +63,8 @@ function StarDisplay({ stars }) {
     {
       [1,2,3,4,5].map(n => 
         stars >= n ?
-          <StarFill style={{height: "2em", width: "2em", color: "yellow"}} /> :
-          <Star style={{height: "2em", width: "2em"}} />
+          <StarFill style={{height: "2em", width: "2em", color: "yellow"}} key={n}/> :
+          <Star style={{height: "2em", width: "2em"}} key={n}/>
       )
     }
   </div>
@@ -110,25 +110,21 @@ function ReviewBlock({ review }) {
   </Row>
 }
 
-function ReviewSection({ breweryId, myReview, user }) {
-  const [fetching, setFetching] = useState(false);
+function ReviewSection({ breweryId, myReview, user, dispatch }) {
   const [reviews, setReviews] = useState([]);
   const [page, setPage] = useState(0);
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    if (!fetching) {
-      setFetching(true);
-      fetch_reviews(breweryId, 0).then((data) => {
-        setPage(1);
-        let reviews1 = reviews;
-        setReviews(reviews1.concat(data))
-        if (data.length < 10) {
-          setDone(true);
-        }
-      })
-    }    
-  })
+    fetch_reviews(breweryId, 0).then((data) => {
+      setPage(1);
+      let reviews1 = reviews;
+      setReviews(reviews1.concat(data))
+      if (data.length < 10) {
+        setDone(true);
+      }
+    })
+  }, [breweryId])
 
   function fetchReviews() {
     if (!done) {

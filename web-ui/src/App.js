@@ -21,7 +21,7 @@ function App() {
             <Route path="/profile" exact>
               <Profile />
             </Route>
-            <Route path="/breweries/:id">
+            <Route path="/breweries/:id" exact>
               <BreweryShow />
             </Route>
           </Switch>

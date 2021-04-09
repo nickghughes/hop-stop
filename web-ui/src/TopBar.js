@@ -7,6 +7,7 @@ import { clear_banners } from './store';
 import DismissibleAlert from './DismissibleAlert';
 import FriendsList from './FriendsList';
 import MeetDropdown from './MeetDropdown';
+import { leave_channel } from './socket';
 
 let AccountDropdown = connect(({session}) => ({session}))(({session, dispatch}) => {
   let history = useHistory();
@@ -14,6 +15,7 @@ let AccountDropdown = connect(({session}) => ({session}))(({session, dispatch}) 
   function logout() {
     clear_banners();
     history.push("/");
+    leave_channel();
     dispatch({type: 'session/clear'});
   }
 

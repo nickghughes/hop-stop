@@ -2,7 +2,7 @@ defmodule HopStopWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", HopStopWeb.RoomChannel
+  channel "user:*", HopStopWeb.UserChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
