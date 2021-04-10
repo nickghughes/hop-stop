@@ -1,3 +1,5 @@
+![](web-ui/src/assets/logo.png)
+
 # Hop Stop
 
 https://hopstop.grumdog.com
@@ -25,4 +27,4 @@ Find the written report for this project in `report.md`.
   formatted using regex found from a stack overflow post at
   https://stackoverflow.com/questions/8358084/regular-expression-to-reformat-a-us-phone-number-in-javascript.
   
-- Hop Stop's logo (seen on the site) was generated using the website www.freelogodesign.org.
+- Hop Stop's logo was generated using the website www.freelogodesign.org.

@@ -1,3 +1,5 @@
+![](web-ui/src/assets/logo.png)
+
 # Hop Stop - Written Report
 
 ### Meta
