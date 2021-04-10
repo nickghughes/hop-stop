@@ -252,7 +252,8 @@
   The implementation for the map (auto panning and zooming) is
   described in the previous section.
 
-- *What was the most significant challenge you encountered and how did you solve it?*
+- *What was the most significant challenge you encountered and how did
+  you solve it?*
 
   The most significant challenge that was faced in the development of
   Hop Stop was the subpar query options exposed by **Open Brewery
@@ -262,18 +263,19 @@
   infinite scroll (which was one of my proposal experiments) was a
   dynamically expanding location query by postal code, city, and
   state, where whenever no more results were found the most specific
-  query parameter was removed. This method was functional, but
-  nearby breweries were quickly mixed with ones that were across the
-  state or country. Additionally, there was no query option for
-  multiple ids, so querying by favorites would have required a
-  separate query for each id.
+  query parameter was removed. This method was functional, but nearby
+  breweries were quickly mixed with ones that were across the state or
+  country. Additionally, there was no query option for multiple ids,
+  so querying by favorites would have required a separate query for
+  each id.
 
   To circumvent these issues, I was able to contact the developer of
   **Open Brewery DB** through the API's public Discord server. While
   he told me he did not have the time to figure out how to develop a
   "nearest-first" sort query option for the API, he did provide the
-  link to the open source codebase, which is written in Rails. Since I
-  have some experience with Rails from co-op, I was able to figure out
-  how to implement that query option (as well as the array of ids
-  query option) and create a pull request, that was ultimately merged
-  in and deployed. After that, the infinite scroll worked flawlessly.
+  link to the open source codebase, which is written in Rails
+  (https://github.com/chrisjm/openbrewerydb-rails-api). Since I have
+  some experience with Rails from co-op, I was able to figure out how
+  to implement that query option (as well as the array of ids query
+  option) and create a pull request, that was ultimately merged in and
+  deployed. After that, the infinite scroll worked flawlessly.
